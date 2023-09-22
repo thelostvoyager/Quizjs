@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en-US"><link type="text/css" rel="stylesheet" id="dark-mode-custom-link"><link type="text/css" rel="stylesheet" id="dark-mode-general-link"><style lang="en" type="text/css" id="dark-mode-custom-style"></style><style lang="en" type="text/css" id="dark-mode-native-style"></style><style lang="en" type="text/css" id="dark-mode-native-sheet"></style><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <title>Quiz.js</title>
+    <style>
+        body {
+            margin: 1rem auto;
+            padding: 3rem;
+            font-family: sans-serif;
+        }
+        header {
+            width: 50%;
+            margin: 1em auto;
+        }
+        main {
+            min-width: 25rem;
+            max-width: 50%;
+            margin: 0px auto;
+            display:flex; 
+            flex-direction: column;
+        }
+        #statement {
+            border: 1px solid black;
+            border-radius: 0.5rem;
+            box-shadow: 5px 5px 5px gray;
+            padding: 1rem;
+            font-size: x-large;
+            text-align: center;
+            margin: 1rem 0px;
+            min-height: 2em;
+        }
+        #explanation {
+            padding: 1rem;
+            text-align: center;
+        }
+        #options {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        button {
+            padding: 0.5rem;
+            font-size: medium;
+            border-radius: 5px;
+        }
+        .correct {
+            background-color: lightgreen;
+        }
+        .incorrect {
+            background-color: lightpink;
+        }
+    </style>
+  </head>
+  <body>
+    <header>
+    <h1>Quiz.js</h1>
+    <p>Do you know JS? Find out!</p>
+    <div id="score"> Score: 
+        <span id="correct">0</span>
+        /
+        <span id="completed">0</span>
+    </div>
+    </header>
+
+    <main>
+    <div id="statement">
+        
+    </div>
+
+    <div id="options">
+        <button name="true" value="true">true</button>
+        <button name="false" value="false">false</button>
+    </div>
+    <button id="next-question" name="next-question" >Next Question</button>
+    <div id="explanation">
+    </div>
+    </main>
+
+  
+
+  <script type="text/javascript">
+    const statement = document.getElementById("statement");
+    const optionButtons = document.querySelector("#options").children;
+    const explanation = document.getElementById("explanation");
+    const nextButton = document.getElementById("next-question");
+
+    let fact;
+    let correct = 0;
+    let completed = 0;
+    const facts = [{
+            statement: "Arrays are objects",
+            answer: "true",
+            explanation: "Arrays are type object"
+        },
+        {
+            statement: "'1'+'1'==='2'",
+            answer: "false",
+            explanation: "It will be '11' as strings are immutable"
+        }
+    ];
+        
+        const hide = (element) => element.classList.add("hidden");
+        const show = (element) => element.classList.remove("hidden");
+        const disable = (button) => button.setAttribute("disabled","");
+        const enable = (button) => button.removeAttribute("disabled");
+        function isCorrect(guess){
+            return guess === fact.answer;
+        }
+
+        function getNextFact(){
+            fact = facts.shift();
+            statement.textContent = fact.statement;
+            hide(explanation);
+
+            for (let button of optionButtons){
+                button.classList.remove("correct");
+                button.classList.remove("incorrect");
+                enable(button);
+            }
+            disable(nextButton);
+        }
+
+        nextButton.addEventListener("click",getNextFact);
+
+
+        for (let button of optionButtons){
+            button.addEventListener("click" , (event)=>{
+               
+                for (let disButton of optionButtons){
+                    disable(disButton);
+                }
+                if(isCorrect(button.value)){
+                    button.classList.add("correct");
+                    correct+=1;
+                }else {
+                    button.classList.add("incorrect");
+                }
+
+                if(facts.length>0){
+                    enable(nextButton);
+                }else{
+                    nextButton.textContent = "No More Questions";
+                }
+
+                explanation.textContent = fact.explanation;
+                show(explanation);
+
+                completed+=1;
+                document.getElementById("correct").textContent=correct;
+                document.getElementById("completed").textContent=completed;
+                
+            });
+
+        }
+        getNextFact();
+  </script>
+
+<div id="forest-ext-shadow-host"><template shadowrootmode="open"><head></head><div id="root"></div></template></div></body></html>
